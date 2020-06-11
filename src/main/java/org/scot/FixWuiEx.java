@@ -13,51 +13,49 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 public class FixWuiEx {
-
-	FIXService fixService;
-	Server jetty;
-
-	public static void main(String[] args) {
-		FixWuiEx fixWuiEx = new FixWuiEx();
-		fixWuiEx.start();
-	}
-
-	private void start() {
-		// TODO Auto-generated method stub
-		try {
-
-			fixService = new FIXServiceImpl();
-			fixService.init();
-
-			URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
-			ResourceConfig config = new ResourceConfig();
-			config.packages("org.scot");
-			config.register(new AbstractBinder() {
-
-				@Override
-				protected void configure() {
-					bind(fixService).to(FIXService.class);
-				}
-			});
-
-			jetty = JettyHttpContainerFactory.createServer(baseUri, false);
-
-			ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-			contextHandler.setContextPath("/");
-
-			contextHandler.addServlet(new ServletHolder(new ServletContainer(config)), "/api/*");
-
-			jetty.setHandler(contextHandler);
-
-			jetty.start();
-			
-			jetty.join();
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
+    
+    FIXService fixService;
+    Server     jetty;
+    
+    public static void main(String[] args) {
+        FixWuiEx fixWuiEx = new FixWuiEx();
+        fixWuiEx.start();
+    }
+    
+    private void start() {
+        // TODO Auto-generated method stub
+        try {
+            
+            fixService = new FIXServiceImpl();
+            fixService.init();
+            
+            ResourceConfig config = new ResourceConfig();
+            config.packages("org.scot");
+            config.register(new AbstractBinder() {
+                
+                @Override
+                protected void configure() {
+                    bind(fixService).to(FIXService.class);
+                }
+            });
+            ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+            contextHandler.setContextPath("/");
+            contextHandler.addServlet(new ServletHolder(new ServletContainer(config)), "/api/*");
+            
+            URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
+            jetty = JettyHttpContainerFactory.createServer(baseUri, false);
+            
+            jetty.setHandler(contextHandler);
+            
+            jetty.start();
+            
+            jetty.join();
+            
+        } catch ( Exception e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
+    
 }

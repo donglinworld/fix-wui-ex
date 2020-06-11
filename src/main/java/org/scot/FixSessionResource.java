@@ -12,17 +12,17 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/sessions")
 public class FixSessionResource {
-
-	@Inject
-	FIXService fixService;
-	
-		@GET
-		@Produces(MediaType.TEXT_PLAIN)
-		public String getSessions(@Context ServletContext servletContext) {
-			
-			List<String> sessionList = fixService.getSessionList();
-			
-			return sessionList.toString();
-		}
-
+    
+    @Inject
+    FIXService fixService;
+    
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getSessions(@Context ServletContext servletContext) {
+        
+        List<String> sessionList = fixService.getSessionList();
+        
+        return sessionList.toString();
+    }
+    
 }

@@ -10,10 +10,10 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ProfileResource {
-	
-	@GET
-	public Profile getProfiles() {
-		return new Profile(1L,"Rasika Chandimal","Rasika","Chandimal");
-	}
-
+    
+    @GET
+    public Profile getProfiles() {
+        return new Profile(1L, "Rasika Chandimal", "Rasika", "Chandimal");
+    }
+    
 }
