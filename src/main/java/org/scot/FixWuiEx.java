@@ -5,8 +5,12 @@ import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.resource.Resource;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -38,14 +42,26 @@ public class FixWuiEx {
                     bind(fixService).to(FIXService.class);
                 }
             });
-            ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-            contextHandler.setContextPath("/");
-            contextHandler.addServlet(new ServletHolder(new ServletContainer(config)), "/api/*");
+            ServletContextHandler jerseyServletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+            jerseyServletContextHandler.setContextPath("/");
+            jerseyServletContextHandler.addServlet(new ServletHolder(new ServletContainer(config)), "/api/*");
+            
+            ResourceHandler staticResourceHandler = new ResourceHandler();
+            staticResourceHandler.setDirectoriesListed(false);
+            staticResourceHandler.setBaseResource(Resource.newResource(FixWuiEx.class.getClassLoader().getResource("static")));
+            staticResourceHandler.setWelcomeFiles(new String[]{"Welcome.html"});
+            ContextHandler staticContextHandler = new ContextHandler("/static");
+            staticContextHandler.setHandler(staticResourceHandler);
+            
+            HandlerList handlerList = new HandlerList();
+            handlerList.addHandler(staticContextHandler);
+            handlerList.addHandler(jerseyServletContextHandler);
+            
             
             URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
             jetty = JettyHttpContainerFactory.createServer(baseUri, false);
             
-            jetty.setHandler(contextHandler);
+            jetty.setHandler(handlerList);
             
             jetty.start();
             
