@@ -45,7 +45,6 @@ public class FixWuiEx {
 			ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 			contextHandler.setContextPath("/");
 
-			contextHandler.getServletContext().setAttribute("jerseyConfig", config);
 			contextHandler.addServlet(new ServletHolder(new ServletContainer(config)), "/api/*");
 
 			jetty.setHandler(contextHandler);
