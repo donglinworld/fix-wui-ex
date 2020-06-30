@@ -1,0 +1,14 @@
+
+To install postgre9.6 on RHEL 8
+dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+dnf -qy module disable postgresql
+dnf install postgresql96-server
+/usr/pgsql-9.6/bin/postgresql96-setup initdb
+systemctl enable postgresql-9.6
+systemctl start postgresql-9.6
+
+
+sudo -u postgres psql
+postgres=# create database mydb;
+postgres=# create user myuser with encrypted password 'mypass';
+postgres=# grant all privileges on database mydb to myuser;
