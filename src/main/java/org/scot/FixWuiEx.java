@@ -15,15 +15,45 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 public class FixWuiEx {
     
-    FIXService fixService;
-    Server     jetty;
+    ComboPooledDataSource datasource;
+    Jdbi                  jdbi;
+    
+    FIXService            fixService;
+    Server                jetty;
     
     public static void main(String[] args) {
         FixWuiEx fixWuiEx = new FixWuiEx();
-        fixWuiEx.start();
+        fixWuiEx.init();
+        // fixWuiEx.start();
+    }
+    
+    private void init() {
+        try {
+            datasource = new ComboPooledDataSource();
+            
+            datasource.setDriverClass("org.postgresql.Driver");
+            // loads the jdbc driver
+            datasource.setJdbcUrl("jdbc:postgresql://18.183.35.88/devdb");
+            datasource.setUser("dev");
+            datasource.setPassword("dev");
+            
+            jdbi = Jdbi.create(datasource);
+            // .installPlugin(new SqlObjectPlugin())
+            // .installPlugin(new PostgresPlugin());
+            Handle handle = jdbi.open();
+            // handle.execute("SELECT 1;");
+            handle.close();
+            
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
     }
     
     private void start() {
@@ -42,21 +72,22 @@ public class FixWuiEx {
                     bind(fixService).to(FIXService.class);
                 }
             });
-            ServletContextHandler jerseyServletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+            ServletContextHandler jerseyServletContextHandler = new ServletContextHandler(
+                    ServletContextHandler.SESSIONS);
             jerseyServletContextHandler.setContextPath("/");
             jerseyServletContextHandler.addServlet(new ServletHolder(new ServletContainer(config)), "/api/*");
             
             ResourceHandler staticResourceHandler = new ResourceHandler();
             staticResourceHandler.setDirectoriesListed(false);
-            staticResourceHandler.setBaseResource(Resource.newResource(FixWuiEx.class.getClassLoader().getResource("static")));
-            staticResourceHandler.setWelcomeFiles(new String[]{"Welcome.html"});
+            staticResourceHandler
+                    .setBaseResource(Resource.newResource(FixWuiEx.class.getClassLoader().getResource("static")));
+            staticResourceHandler.setWelcomeFiles(new String[] { "Welcome.html" });
             ContextHandler staticContextHandler = new ContextHandler("/static");
             staticContextHandler.setHandler(staticResourceHandler);
             
             HandlerList handlerList = new HandlerList();
             handlerList.addHandler(staticContextHandler);
             handlerList.addHandler(jerseyServletContextHandler);
-            
             
             URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
             jetty = JettyHttpContainerFactory.createServer(baseUri, false);
