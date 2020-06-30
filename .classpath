@@ -54,5 +54,8 @@
 	<classpathentry kind="lib" path="lib/postgresql-42.2.8.jar"/>
 	<classpathentry kind="lib" path="lib/c3p0-0.9.5.4.jar"/>
 	<classpathentry kind="lib" path="lib/mchange-commons-java-0.2.15.jar"/>
+	<classpathentry kind="lib" path="lib/geantyref-1.3.7.jar"/>
+	<classpathentry kind="lib" path="lib/antlr4-runtime-4.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/caffeine-2.8.0.jar"/>
 	<classpathentry kind="output" path="classes/main/classes"/>
 </classpath>

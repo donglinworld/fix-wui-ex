@@ -17,6 +17,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.postgres.PostgresPlugin;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
@@ -44,11 +46,11 @@ public class FixWuiEx {
             datasource.setUser("dev");
             datasource.setPassword("dev");
             
-            jdbi = Jdbi.create(datasource);
-            // .installPlugin(new SqlObjectPlugin())
-            // .installPlugin(new PostgresPlugin());
+            jdbi = Jdbi.create(datasource)
+                    .installPlugin(new SqlObjectPlugin())
+                    .installPlugin(new PostgresPlugin());
             Handle handle = jdbi.open();
-            // handle.execute("SELECT 1;");
+            handle.execute("SELECT 1;");
             handle.close();
             
         } catch ( Exception e ) {
