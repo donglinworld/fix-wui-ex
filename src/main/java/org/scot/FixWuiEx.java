@@ -43,7 +43,7 @@ public class FixWuiEx {
             
             datasource.setDriverClass("org.postgresql.Driver");
             // loads the jdbc driver
-            datasource.setJdbcUrl("jdbc:postgresql://18.183.35.88/devdb");
+            datasource.setJdbcUrl("jdbc:postgresql://18.181.72.208/devdb");
             datasource.setUser("dev");
             datasource.setPassword("dev");
             
