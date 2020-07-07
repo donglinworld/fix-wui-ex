@@ -38,8 +38,8 @@ public class FixWuiEx {
     
     public static void main(String[] args) {
         FixWuiEx fixWuiEx = new FixWuiEx();
-        fixWuiEx.init();
-        // fixWuiEx.start();
+        // fixWuiEx.init();
+        fixWuiEx.start();
     }
     
     private void init() {
@@ -109,8 +109,8 @@ public class FixWuiEx {
             staticResourceHandler.setDirectoriesListed(false);
             staticResourceHandler
                     .setBaseResource(Resource.newResource(FixWuiEx.class.getClassLoader().getResource("static")));
-            staticResourceHandler.setWelcomeFiles(new String[] { "Welcome.html" });
-            ContextHandler staticContextHandler = new ContextHandler("/static");
+            staticResourceHandler.setWelcomeFiles(new String[] { "index.html" });
+            ContextHandler staticContextHandler = new ContextHandler("/");
             staticContextHandler.setHandler(staticResourceHandler);
             
             HandlerList handlerList = new HandlerList();
