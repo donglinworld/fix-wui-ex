@@ -1,6 +1,7 @@
 package org.scot;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -11,7 +12,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
-import org.flywaydb.core.Flyway;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -20,6 +20,11 @@ import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.postgres.PostgresPlugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
+import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
@@ -54,10 +59,25 @@ public class FixWuiEx {
             handle.execute("SELECT 1;");
             handle.close();
             
-            Flyway flyway = Flyway.configure()
-                    .dataSource(datasource)
-                    .load();
-            flyway.migrate();
+            // Jdbi implements your interface based on annotations
+            List<User> userNames = jdbi.withExtension(UserDao.class, dao -> {
+                dao.dropTable();
+                dao.createTable();
+                
+                dao.insertPositional(0, "Alice");
+                dao.insertPositional(1, "Bob");
+                dao.insertNamed(2, "Clarice");
+                dao.insertBean(new User(3, "David"));
+                
+                return dao.listUsers();
+            });
+            
+            System.out.println(userNames.toString());
+            
+            // Flyway flyway = Flyway.configure()
+            // .dataSource(datasource)
+            // .load();
+            // flyway.migrate();
             
         } catch ( Exception e ) {
             e.printStackTrace();
@@ -113,4 +133,26 @@ public class FixWuiEx {
         
     }
     
+}
+
+// Define your own declarative interface
+interface UserDao {
+    @SqlUpdate("DROP TABLE IF EXISTS testuser;")
+    void dropTable();
+    
+    @SqlUpdate("CREATE TABLE testuser (id SERIAL PRIMARY KEY, name TEXT DEFAULT NULL);")
+    void createTable();
+    
+    @SqlUpdate("INSERT INTO testuser(id, name) VALUES (?, ?)")
+    void insertPositional(int id, String name);
+    
+    @SqlUpdate("INSERT INTO testuser(id, name) VALUES (:id, :name)")
+    void insertNamed(@Bind("id") int id, @Bind("name") String name);
+    
+    @SqlUpdate("INSERT INTO testuser(id, name) VALUES (:id, :name)")
+    void insertBean(@BindBean User user);
+    
+    @SqlQuery("SELECT * FROM testuser ORDER BY name")
+    @RegisterBeanMapper(User.class)
+    List<User> listUsers();
 }
