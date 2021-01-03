@@ -59,30 +59,27 @@ public class ServerSentEventsResource {
                             .data(String.class, "starting domain " + id + " ...").build());
                     System.out.println("starting domain");
                     
-                    Thread.sleep(2000);
-                    seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "50%").build());
-                    System.out.println("50%");
+                    int percent = 0;
                     
-                    Thread.sleep(2000);
-                    seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "60%").build());
-                    System.out.println("60%");
-                    
-                    Thread.sleep(2000);
-                    seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "70%").build());
-                    System.out.println("70%");
-                    
-                    Thread.sleep(2000);
-                    seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "99%").build());
-                    System.out.println("99%");
-                    
-                    Thread.sleep(2000);
-                    seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "done").build());
-                    System.out.println("done");
+                    for ( percent = 0; percent <= 100; percent++ ) {
+                        Thread.sleep(1000);
+                        seq.write(
+                                new OutboundEvent.Builder().name("domain-progress").data(String.class, percent + "%")
+                                        .build());
+                        System.out.println(percent + "%");
+                    }
                     
                     seq.close();
                     
                 } catch ( final InterruptedException | IOException e ) {
+                    System.out.println("end from clent side.");
                     e.printStackTrace();
+                } finally {
+                    try {
+                        seq.close();
+                    } catch ( IOException e ) {
+                        // ignore;
+                    }
                 }
             }
         }.start();

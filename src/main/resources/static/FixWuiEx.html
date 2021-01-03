@@ -9,7 +9,6 @@
     <p>This is an example of FixWuiEx.</p>
     <p id="result">Result of SSE:</p>
     <script>
-        console.log("test log");
         var source = new EventSource("api/sse/domains/1");
 
         source.addEventListener("domain-progress", function (event) {
@@ -18,13 +17,17 @@
 
 
         });
-        
+
         source.onerror = function (event) {
             if (event.eventPhase == EventSource.CLOSED) {
                 source.close();
                 console.log("Event Source Closed");
             }
         };
+
+        window.addEventListener("beforeunload", function (e) {
+            source.close();
+        }, false);
     </script>
 </body>
 
