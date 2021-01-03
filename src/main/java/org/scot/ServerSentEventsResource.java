@@ -44,10 +44,11 @@ public class ServerSentEventsResource {
         ServerSentEventsResource.setEventOutput(new EventOutput());
     }
     
-    @POST
+    @GET
     @Path("domains/{id}")
     @Produces(SseFeature.SERVER_SENT_EVENTS)
     public EventOutput startDomain(@PathParam("id") final String id) {
+        
         final EventOutput seq = new EventOutput();
         
         new Thread() {
@@ -56,16 +57,28 @@ public class ServerSentEventsResource {
                 try {
                     seq.write(new OutboundEvent.Builder().name("domain-progress")
                             .data(String.class, "starting domain " + id + " ...").build());
+                    System.out.println("starting domain");
+                    
                     Thread.sleep(2000);
                     seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "50%").build());
+                    System.out.println("50%");
+                    
                     Thread.sleep(2000);
                     seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "60%").build());
+                    System.out.println("60%");
+                    
                     Thread.sleep(2000);
                     seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "70%").build());
+                    System.out.println("70%");
+                    
                     Thread.sleep(2000);
                     seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "99%").build());
+                    System.out.println("99%");
+                    
                     Thread.sleep(2000);
                     seq.write(new OutboundEvent.Builder().name("domain-progress").data(String.class, "done").build());
+                    System.out.println("done");
+                    
                     seq.close();
                     
                 } catch ( final InterruptedException | IOException e ) {
