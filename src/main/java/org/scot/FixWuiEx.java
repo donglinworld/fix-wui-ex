@@ -14,6 +14,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.jdbi.v3.core.Handle;
@@ -89,9 +90,9 @@ public class FixWuiEx {
         try {
             
             fixService = new FIXServiceImpl();
-            fixService.init();
+            // fixService.init();
             
-            ResourceConfig config = new ResourceConfig();
+            ResourceConfig config = new ResourceConfig(SseFeature.class);
             config.packages("org.scot");
             config.register(new AbstractBinder() {
                 
