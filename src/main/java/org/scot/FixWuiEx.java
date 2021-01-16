@@ -39,7 +39,7 @@ public class FixWuiEx {
     
     public static void main(String[] args) {
         FixWuiEx fixWuiEx = new FixWuiEx();
-        // fixWuiEx.init();
+        fixWuiEx.init();
         fixWuiEx.start();
     }
     
@@ -49,7 +49,7 @@ public class FixWuiEx {
             
             datasource.setDriverClass("org.postgresql.Driver");
             // loads the jdbc driver
-            datasource.setJdbcUrl("jdbc:postgresql://18.181.72.208/devdb");
+            datasource.setJdbcUrl("jdbc:postgresql://18.183.64.170/devdb");
             datasource.setUser("dev");
             datasource.setPassword("dev");
             
