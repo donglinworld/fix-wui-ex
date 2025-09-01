@@ -1,0 +1,24 @@
+{
+    "java.project.sourcePaths": [
+        "src/main/java",
+        "src/test/java"
+    ],
+    "java.project.resourcePaths": [
+        "src/main/resources/dev",
+        "src/main/resources",
+        "src/test/resources"
+    ],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "../wui/build/libs/easyfixwui-2.0.0.jar"
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "editor.formatOnSave": true,
+    "files.exclude": {
+        "**/.gradle": true,
+        "**/bin": true,
+        "**/build": true
+    }
+}

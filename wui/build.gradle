@@ -1,0 +1,61 @@
+plugins {
+    id 'java-library' // Use the base plugin for common lifecycle tasks
+}
+
+version = '2.0.0'
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+dependencies {
+
+}
+
+// Apply a specific Java toolchain to ease working on different environments.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+// Define the directory where your Node.js project resides
+def npmProjectDir = file("./") // Adjust this path
+
+// Task to install npm dependencies
+task npmInstall(type: Exec) {
+    workingDir = npmProjectDir
+    commandLine 'npm', 'install'
+    
+    inputs.files(
+        file('package.json'),
+        file('package-lock.json')
+    )
+    outputs.dir(file('node_modules'))
+}
+
+// Task to run npm build
+task npmBuild(type: Exec) {
+    dependsOn npmInstall // Ensure dependencies are installed before build
+    workingDir = npmProjectDir
+    environment 'NODE_OPTIONS', '--openssl-legacy-provider'
+    commandLine 'npm', 'run', 'build'
+    
+    // Specify inputs and outputs
+    inputs.dir(file('src/'))       // Example input file
+    outputs.dir(file('build/static/'))     // Example output file
+}
+
+jar {
+    archiveBaseName.set('easyfixwui')          // Set base name
+    archiveVersion.set("${project.version}")    // Set version
+    
+    from('build/static') {
+        into('static') // Place these files in an "extra" folder inside the JAR
+    }
+}
+
+// Hook into Gradle's lifecycle
+processResources.dependsOn npmBuild
+
