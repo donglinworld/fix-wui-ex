@@ -20,13 +20,13 @@ public class FIXServiceImpl implements FIXService {
         try {
             
             Class<?> classobj = Class.forName("simplefix.quickfix.EngineFactory");
-            Object engineobj = classobj.newInstance();
+            Object engineobj = classobj.getDeclaredConstructor().newInstance();
             
             if ( engineobj instanceof EngineFactory ) {
                 
                 _engineFact = (EngineFactory) engineobj;
                 _engine = _engineFact.createEngine();
-                _engine.initEngine("src/main/resources/banzai.cfg");
+                _engine.initEngine("app/src/main/resources/banzai.cfg");
                 
                 Application application = new _Application();
                 
