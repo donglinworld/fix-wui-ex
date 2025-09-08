@@ -1,4 +1,4 @@
-package org.scot;
+package easyfix;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +58,7 @@ public class FIXServiceImpl implements FIXService {
         }
         
         @Override
-        public void onAppMessage(final Message arg0, final Session arg1) {
+        public void onRecvAppMessage(final Message arg0, final Session arg1) {
             // TODO Auto-generated method stub
             
         }
@@ -75,7 +75,7 @@ public class FIXServiceImpl implements FIXService {
         }
         
         @Override
-        public void toAppMessage(Message arg0, Session arg1) {
+        public void onSendAppMessage(Message arg0, Session arg1) {
             // TODO Auto-generated method stub
             
         }

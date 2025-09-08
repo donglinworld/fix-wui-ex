@@ -126,6 +126,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl
     implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '4.0.5'
     
+    implementation files('libs/simple-quick-fix-2.3.1.jar')
     
     //need wui
     implementation project(':wui')

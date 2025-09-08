@@ -20,35 +20,36 @@ import jakarta.ws.rs.core.UriBuilder;
 
 public class EasyFIX extends AppCommon {
     private final static Logger log = LoggerFactory.getLogger(EasyFIX.class);
-    
-    protected Server            jetty;
-    
+
+    FIXService fixService;
+    protected Server jetty;
+
     public static void main(String[] args) {
         log.info("Application start.");
-        
+
         try {
-            
+
             EasyFIX app = new EasyFIX();
             app.init();
             app.start();
-            
-        } catch ( Exception e ) {
+
+        } catch (Exception e) {
             log.error("Error", e);
         }
-        
+
         log.info("Application end.");
-        
+
         System.exit(0);
     }
-    
+
     @Override
     protected void init() throws Exception {
         super.init();
-        
+
         ResourceConfig config = new ResourceConfig();
-        config.packages("easyfix.controller");
+        config.packages("easyfix");
         config.register(new AbstractBinder() {
-            
+
             @Override
             protected void configure() {
 
@@ -58,7 +59,7 @@ public class EasyFIX extends AppCommon {
                 ServletContextHandler.SESSIONS);
         jerseyServletContextHandler.setContextPath("/");
         jerseyServletContextHandler.addServlet(new ServletHolder(new ServletContainer(config)), "/api/*");
-        
+
         ResourceHandler staticResourceHandler = new ResourceHandler();
         staticResourceHandler.setDirectoriesListed(false);
         staticResourceHandler
@@ -66,20 +67,22 @@ public class EasyFIX extends AppCommon {
         staticResourceHandler.setWelcomeFiles(new String[] { "index.html" });
         ContextHandler staticContextHandler = new ContextHandler("/");
         staticContextHandler.setHandler(staticResourceHandler);
-        
+
         HandlerList handlerList = new HandlerList();
         handlerList.addHandler(staticContextHandler);
         handlerList.addHandler(jerseyServletContextHandler);
-        
+
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(Integer.parseInt(properties.getProperty("wui.port")))
                 .build();
         jetty = JettyHttpContainerFactory.createServer(baseUri, false);
-        
+
         jetty.setHandler(handlerList);
     }
-    
+
     protected void start() throws Exception {
-        
+        fixService = new FIXServiceImpl();
+        fixService.init();
+
         jetty.start();
         jetty.join();
     }

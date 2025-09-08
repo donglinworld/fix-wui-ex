@@ -1,4 +1,4 @@
-package org.scot;
+package easyfix;
 
 import java.util.List;
 
