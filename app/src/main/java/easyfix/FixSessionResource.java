@@ -24,10 +24,10 @@ public class FixSessionResource {
     @GET
     @Path("/sessions")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SessionStatus> getSessions() {
+    public JSONDataWrapper<SessionStatus> getSessions() {
         List<SessionStatus> sessionList = fixService.getSessionList();
         
-        return sessionList;
+        return new JSONDataWrapper<SessionStatus> (sessionList);
     }
     
 }
