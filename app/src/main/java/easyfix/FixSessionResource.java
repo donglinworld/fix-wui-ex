@@ -25,8 +25,8 @@ public class FixSessionResource {
     @Path("/sessions")
     @Produces(MediaType.APPLICATION_JSON)
     public JSONDataWrapper<SessionStatus> getSessions() {
+        log.debug("Fetching session list");
         List<SessionStatus> sessionList = fixService.getSessionList();
-        
         return new JSONDataWrapper<SessionStatus> (sessionList);
     }
     

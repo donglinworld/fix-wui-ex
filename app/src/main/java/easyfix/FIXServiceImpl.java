@@ -3,6 +3,9 @@ package easyfix;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import simplefix.Application;
 import simplefix.Engine;
 import simplefix.EngineFactory;
@@ -10,6 +13,7 @@ import simplefix.Message;
 import simplefix.Session;
 
 public class FIXServiceImpl implements FIXService {
+    private final static Logger log = LoggerFactory.getLogger(FIXServiceImpl.class);
     
     private static EngineFactory _engineFact;
     private Engine               _engine;
@@ -32,7 +36,7 @@ public class FIXServiceImpl implements FIXService {
                 
                 _engine.startInProcess(application);
                 
-                System.out.println("engine started");
+                log.info("engine started");
             }
         } catch ( Exception e ) {
             e.printStackTrace();
@@ -52,8 +56,8 @@ public class FIXServiceImpl implements FIXService {
             } 
             sessions.add(new SessionStatus(session.getSenderCompID() + "<-->" + session.getTargetCompID(), status));
         }
-        
-        //Collections.sort(sessions);
+
+        Collections.sort(sessions, (s1, s2) -> s1.getSessionId().compareTo(s2.getSessionId()));
         return sessions;
     }
     
@@ -75,7 +79,6 @@ public class FIXServiceImpl implements FIXService {
         
         @Override
         public void onLogout(final Session arg0) {
-            // TODO Auto-generated method stub
             
         }
         
