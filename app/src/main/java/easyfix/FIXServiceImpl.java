@@ -41,14 +41,19 @@ public class FIXServiceImpl implements FIXService {
     }
     
     @Override
-    public ArrayList<String> getSessionList() throws IllegalArgumentException {
-        ArrayList<String> sessions = new ArrayList<String>();
+    public ArrayList<SessionStatus> getSessionList() throws IllegalArgumentException {
+        ArrayList<SessionStatus> sessions = new ArrayList<SessionStatus>();
         
         for ( Session session : _engine.getAllSessions() ) {
-            sessions.add(session.getSenderCompID() + "<-->" + session.getTargetCompID());
+            String status = "UNKNOWN";
+            if (session instanceof simplefix.quickfix.Session) {
+                simplefix.quickfix.Session qfSession = (simplefix.quickfix.Session) session;
+                status = qfSession.getQuickFixSession().isLoggedOn() ? "UP" : "DOWN";
+            } 
+            sessions.add(new SessionStatus(session.getSenderCompID() + "<-->" + session.getTargetCompID(), status));
         }
         
-        Collections.sort(sessions);
+        //Collections.sort(sessions);
         return sessions;
     }
     

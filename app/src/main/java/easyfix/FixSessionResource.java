@@ -24,8 +24,8 @@ public class FixSessionResource {
     @GET
     @Path("/sessions")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getSessions() {
-        List<String> sessionList = fixService.getSessionList();
+    public List<SessionStatus> getSessions() {
+        List<SessionStatus> sessionList = fixService.getSessionList();
         
         return sessionList;
     }

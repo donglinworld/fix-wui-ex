@@ -6,6 +6,6 @@ public interface FIXService {
     
     void init();
     
-    List<String> getSessionList();
+    List<SessionStatus> getSessionList();
     
 }
