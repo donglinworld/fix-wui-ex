@@ -2,6 +2,9 @@ package easyfix;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
@@ -12,18 +15,19 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/")
 @Singleton
 public class FixSessionResource {
+
+    private final static Logger log = LoggerFactory.getLogger(FixSessionResource.class);
     
     @Inject
     FIXService fixService;
     
     @GET
     @Path("/sessions")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getSessions() {
-        
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<String> getSessions() {
         List<String> sessionList = fixService.getSessionList();
         
-        return sessionList.toString();
+        return sessionList;
     }
     
 }

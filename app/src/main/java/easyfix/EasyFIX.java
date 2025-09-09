@@ -45,14 +45,14 @@ public class EasyFIX extends AppCommon {
     @Override
     protected void init() throws Exception {
         super.init();
+        fixService = new FIXServiceImpl();
 
         ResourceConfig config = new ResourceConfig();
         config.packages("easyfix");
         config.register(new AbstractBinder() {
-
             @Override
             protected void configure() {
-
+                bind(fixService).to(FIXService.class);
             }
         });
         ServletContextHandler jerseyServletContextHandler = new ServletContextHandler(
@@ -80,7 +80,7 @@ public class EasyFIX extends AppCommon {
     }
 
     protected void start() throws Exception {
-        fixService = new FIXServiceImpl();
+
         fixService.init();
 
         jetty.start();

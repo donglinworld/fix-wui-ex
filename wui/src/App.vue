@@ -4,15 +4,15 @@
       <v-main>
         <div :class="mainclass">
           <v-tabs v-model="activeTab">
-            <v-tab value="tab-1">Latest Tables</v-tab>
-            <v-tab value="tab-2">Search</v-tab>
+            <v-tab value="tab-1">Sessions</v-tab>
+            <v-tab value="tab-2">Messages</v-tab>
           </v-tabs>
           <v-window v-model="activeTab">
             <v-window-item value="tab-1">
+              <Sessions />
             </v-window-item>
             <v-window-item value="tab-2">
               <p><br></p>
-              <Search />
             </v-window-item>
           </v-window>
         </div>
@@ -24,11 +24,12 @@
 <script>
 import { ref, computed } from 'vue';
 import { useDisplay } from 'vuetify';
+import Sessions from './components/Sessions.vue';
 
 export default {
   name: 'App',
   components: {
-
+    Sessions
   },
   setup() {
     const activeTab = ref('tab-1');
