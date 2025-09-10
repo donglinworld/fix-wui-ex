@@ -61,6 +61,32 @@ public class FIXServiceImpl implements FIXService {
         return sessions;
     }
     
+    @Override
+    public void sendMessage(String sessionId, String messageStr) throws Exception {
+
+        log.debug("Sending message to session: {}", sessionId);
+        log.debug("Message: {}", messageStr);
+
+        Session session = findSession(sessionId);
+        if (session == null) {
+            throw new Exception("Session not found: " + sessionId);
+        }
+        
+        // Parse message string into Message object
+        simplefix.Message message = MsgUtil.convertToFIX(messageStr);
+
+        // Send message through session
+        session.sendAppMessage(message);
+    }
+    
+    private Session findSession(String sessionId) {
+        String[] compIds = sessionId.split("<-->");
+        if (compIds.length != 2) {
+            return null;
+        }
+        return _engine.lookupSession(compIds[0], compIds[1]);
+    }
+    
     private static class _Application implements Application {
         
         public _Application() {

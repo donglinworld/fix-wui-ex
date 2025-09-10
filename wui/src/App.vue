@@ -12,7 +12,7 @@
               <Sessions />
             </v-window-item>
             <v-window-item value="tab-2">
-              <p><br></p>
+              <Messages />
             </v-window-item>
           </v-window>
         </div>
@@ -25,11 +25,13 @@
 import { ref, computed } from 'vue';
 import { useDisplay } from 'vuetify';
 import Sessions from './components/Sessions.vue';
+import Messages from './components/Messages.vue';
 
 export default {
   name: 'App',
   components: {
-    Sessions
+    Sessions,
+    Messages
   },
   setup() {
     const activeTab = ref('tab-1');
