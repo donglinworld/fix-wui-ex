@@ -7,7 +7,18 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="debug" additivity="false">
+        <!-- Set Jetty logging to INFO -->
+        <Logger name="org.eclipse.jetty" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        
+        <!-- Set QuickFIX logging to INFO -->
+        <Logger name="quickfix" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+
+        <!-- Root logger stays at DEBUG -->
+        <Root level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
         </Root>
     </Loggers>

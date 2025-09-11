@@ -12,7 +12,7 @@
       
       <v-text-field
         v-model="messageText"
-        label="Enter FIX Message (e.g. 8=FIX4.2|49= BANZAI42|56= EXEC42|35=D|22=2|48=Sedol|55=Sony|38=100|40=1|54=1)"
+        label="Enter FIX Message (e.g. 8=FIX.4.2|9=57|35=D|34=6|49=BANZAI42|52=20250910-23:54:51.405|56=EXEC42|22=2|48=Sedol|55=Sony|38=100|40=1|54=1|60=20250910-23:54:51.405|21=1|11=abc-123|44=10.5|10=129|)"
         :rules="[v => !!v || 'Message is required']"
         class="mb-4"
       />
