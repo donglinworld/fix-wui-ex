@@ -14,7 +14,10 @@
         v-model="messageText"
         label="Enter FIX Message (e.g. 8=FIX.4.2|9=57|35=D|34=6|49=BANZAI42|52=20250910-23:54:51.405|56=EXEC42|22=2|48=Sedol|55=Sony|38=100|40=1|54=1|60=20250910-23:54:51.405|21=1|11=abc-123|44=10.5|10=129|)"
         :rules="[v => !!v || 'Message is required']"
-        class="mb-4"
+        class="mb-4 message-input"
+        variant="outlined"
+        rows="4"
+        multiline
       />
       
       <v-btn 
@@ -50,26 +53,16 @@ export default {
 
     const sendMessage = async () => {
       try {
-        const response = await fetch('/api/messages/send', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            sessionId: selectedSession.value,
-            message: messageText.value
-          })
-        })
+        const response = await axios.post('/api/messages/send', {
+          sessionId: selectedSession.value,
+          message: messageText.value
+        });
         
-        if (response.ok) {
-          alert('Message sent successfully')
-          messageText.value = ''
-        } else {
-          alert('Failed to send message')
-        }
+        alert('Message sent successfully');
+        messageText.value = '';
       } catch (error) {
-        console.error('Error sending message:', error)
-        alert('Error sending message')
+        console.error('Error sending message:', error);
+        alert('Error sending message');
       }
     }
 
@@ -90,7 +83,17 @@ export default {
 <style scoped>
 .messages-container {
   padding: 20px;
-  max-width: 800px;
+  max-width: 1200px;  /* Increased from 800px */
   margin: 0 auto;
+}
+
+.message-input {
+  width: 100%;
+  font-family: monospace;
+}
+
+/* Make the input area taller */
+:deep(.message-input .v-field__input) {
+  min-height: 120px !important;
 }
 </style>
