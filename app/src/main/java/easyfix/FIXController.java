@@ -13,9 +13,9 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/")
 @Singleton
-public class FixSessionResource {
+public class FIXController {
 
-    private final static Logger log = LoggerFactory.getLogger(FixSessionResource.class);
+    private final static Logger log = LoggerFactory.getLogger(FIXController.class);
     
     @Inject
     FIXService fixService;
