@@ -19,6 +19,9 @@ public class FIXServiceImpl implements FIXService {
     private static EngineFactory _engineFact;
     private Engine               _engine;
     
+    // Store messages for each session (sessionId -> list of messages)
+    private final List<FixMessage> messageHistory = Collections.synchronizedList(new ArrayList<>());
+    
     @Override
     public void init() {
         
@@ -64,7 +67,6 @@ public class FIXServiceImpl implements FIXService {
     
     @Override
     public void sendMessage(String sessionId, String messageStr) throws Exception {
-
         log.debug("Sending message to session: {}", sessionId);
         log.debug("Message: {}", messageStr);
 
@@ -88,15 +90,22 @@ public class FIXServiceImpl implements FIXService {
         return _engine.lookupSession(compIds[0], compIds[1]);
     }
     
-    private static class _Application implements Application {
+    private class _Application implements Application {
         
         public _Application() {
         }
         
         @Override
-        public void onRecvAppMessage(final Message arg0, final Session arg1) {
-            // TODO Auto-generated method stub
-            
+        public void onRecvAppMessage(final Message message, final Session session) {
+            String sessionId = getSessionId(session);
+            FixMessage fixMessage = new FixMessage(
+                sessionId,
+                "RECEIVED",
+                message.toString(),
+                getCurrentTimestamp()
+            );
+            messageHistory.add(fixMessage);
+            log.debug("Received message for session {}: {}", sessionId, message);
         }
         
         @Override
@@ -110,16 +119,36 @@ public class FIXServiceImpl implements FIXService {
         }
         
         @Override
-        public void onSendAppMessage(Message arg0, Session arg1) {
-            // TODO Auto-generated method stub
-            
+        public void onSendAppMessage(Message message, Session session) {
+            String sessionId = getSessionId(session);
+            FixMessage fixMessage = new FixMessage(
+                sessionId,
+                "SENT",
+                message.toString(),
+                getCurrentTimestamp()
+            );
+            messageHistory.add(fixMessage);
+            log.debug("Sent message for session {}: {}", sessionId, message);
+        }
+        
+        private String getSessionId(Session session) {
+            return session.getSenderCompID() + "<-->" + session.getTargetCompID();
+        }
+        
+        private String getCurrentTimestamp() {
+            return java.time.LocalDateTime.now().toString();
         }
     };
 
     @Override
     public List<FixMessage> getSessionMessages(String sessionId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSessionMessages'");
+        log.debug("Getting messages for session: {}", sessionId);
+        
+        // Return messages for the specific session, sorted by timestamp in descending order
+        return messageHistory.stream()
+            .filter(msg -> msg.getSessionId().equals(sessionId))
+            .sorted((m1, m2) -> m2.getTimestamp().compareTo(m1.getTimestamp()))
+            .collect(java.util.stream.Collectors.toList());
     };
     
 }
