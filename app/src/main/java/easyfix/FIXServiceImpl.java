@@ -2,6 +2,7 @@ package easyfix;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,6 +114,12 @@ public class FIXServiceImpl implements FIXService {
             // TODO Auto-generated method stub
             
         }
+    };
+
+    @Override
+    public List<FixMessage> getSessionMessages(String sessionId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSessionMessages'");
     };
     
 }

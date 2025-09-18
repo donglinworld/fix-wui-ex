@@ -9,4 +9,6 @@ public interface FIXService {
     List<SessionStatus> getSessionList();
     
     void sendMessage(String sessionId, String messageStr) throws Exception;
+    
+    List<FixMessage> getSessionMessages(String sessionId);
 }
